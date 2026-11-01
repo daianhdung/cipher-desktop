@@ -7,6 +7,27 @@ the existing Java Swing/TCP implementation.
 use replaceable service interfaces and in-memory fixtures. The JavaFX preview makes
 no TCP connections and performs no real encryption, file-content transfer or database operations.
 
+## Default application / NetBeans
+
+The repository root is now a Java 21 Maven application. Its default entry point is
+`studio.cipher.PreviewLauncher`, which opens the new JavaFX frontend in Demo Mode.
+The root build compiles only the JavaFX sources and resources.
+
+In NetBeans, close the previously opened Ant/Swing project, then use **File → Open
+Project** to reopen this repository root (`pom.xml`). Set **JDK 21**, select
+**Set as Main Project**, and press **F6 / Run Project**. The checked-in
+`nbactions.xml` maps Run to `javafx:run`; no main-class chooser is needed.
+Reopening once is necessary if NetBeans has cached the old project type.
+
+From the repository root:
+
+```bash
+mvn javafx:run
+```
+
+The existing Swing/TCP sources remain available through the explicit legacy build
+and test scripts. They are not started by the default application.
+
 ## Run the JavaFX demo
 
 Requirements: Java 21, Maven 3.9+, Python 3.9+, and a desktop session.

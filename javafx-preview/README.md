@@ -8,6 +8,13 @@ service interfaces and in-memory demo state.
 or database operation occurs.** The working Swing/TCP project in the parent
 folder is preserved and is not a dependency of this module.
 
+## Default application in NetBeans
+
+The repository root now also opens this JavaFX frontend by default. Open the root
+`pom.xml` project in NetBeans with JDK 21 and press **F6 / Run Project**. Close and
+reopen an old Ant project once to refresh its project type. This module can still
+be opened independently; both projects map Run to `javafx:run`.
+
 ## Launch Demo Mode
 
 Run source commands from the repository root.
