@@ -8,7 +8,7 @@ def run():
     tests=ROOT/'build/test-v2'; tests.mkdir(parents=True,exist_ok=True)
     cp=os.pathsep.join(map(str,[ROOT/'build/classes',tests,ROOT/'lib/*']))
     subprocess.run(['javac','--release','21','-encoding','UTF-8','-cp',cp,'-d',str(tests),*map(str,(ROOT/'test').glob('*.java'))],check=True)
-    subprocess.run(['java','-cp',cp,'common.KiemTraCommon'],check=True,timeout=30)
+    subprocess.run(['java','-cp',cp,'common.CommonSelfTest'],check=True,timeout=30)
     subprocess.run(['java','-Xmx128m','-cp',cp,'ChatIntegration'],check=True,timeout=120)
     subprocess.run(['java','-Xmx128m','-cp',cp,'ChatFaults'],check=True,timeout=60)
     subprocess.run(['python3',str(ROOT/'scripts/process_test.py')],check=True,timeout=90)

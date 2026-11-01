@@ -18,9 +18,9 @@ import java.util.TreeMap;
  * ("Xin Chào" -> x=1, i=1, n=1, c=1, h=1, à=1, o=1). Chữ số, dấu cách, dấu câu
  * bị bỏ qua. Chữ Việt có dấu được giữ nguyên là một chữ cái riêng.
  */
-public final class KetQuaDemChuCai {
+public final class LetterFrequency {
 
-    private KetQuaDemChuCai() {
+    private LetterFrequency() {
     }
 
     public static Map<Character, Integer> demMap(String banRo) {

@@ -1,7 +1,7 @@
 package chat.client;
 
 import chat.common.Packet;
-import common.KetQuaDemChuCai;
+import common.LetterFrequency;
 import java.awt.*;
 import java.awt.event.*;
 import java.nio.file.*;
@@ -178,9 +178,9 @@ public final class ChatFrame extends JFrame {
         updateControls();
     }
     private void showStatistics(String stats) {
-        letterModel.setRowCount(0);var counts=KetQuaDemChuCai.parse(stats);
+        letterModel.setRowCount(0);var counts=LetterFrequency.parse(stats);
         counts.forEach((letter,count)->letterModel.addRow(new Object[]{letter,count}));
-        labStatus.setText("Server đếm: "+counts.size()+" chữ khác nhau, tổng "+KetQuaDemChuCai.tongChuCai(counts)+" lần");
+        labStatus.setText("Server đếm: "+counts.size()+" chữ khác nhau, tổng "+LetterFrequency.tongChuCai(counts)+" lần");
     }
     private void updateUsers() {
         String selected=users.getSelectedValue();

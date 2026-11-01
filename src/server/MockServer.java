@@ -1,8 +1,8 @@
 package server;
 
 import common.AESUtil;
-import common.GoiTin;
-import common.KetQuaDemChuCai;
+import common.PacketIO;
+import common.LetterFrequency;
 import common.Protocol;
 import common.RSAUtil;
 import java.io.BufferedInputStream;
@@ -35,7 +35,7 @@ import javax.crypto.SecretKey;
  * {@code // TODO CSDL}.
  *
  * Mô hình: 1 thread / client. Khóa AES là trạng thái của phiên, nên đặt
- * trong {@link PhienClient} chứ không phải biến static — hai Client dùng hai
+ * trong {@link ClientSession} chứ không phải biến static — hai Client dùng hai
  * khóa khác nhau vẫn chạy song song đúng.
  *
  * Chạy: java -cp build/classes server.MockServer [port]
@@ -62,20 +62,20 @@ public class MockServer {
             while (true) {
                 Socket s = ss.accept();
                 stt++;
-                Thread t = new Thread(new PhienClient(s, "C" + stt), "phien-" + stt);
+                Thread t = new Thread(new ClientSession(s, "C" + stt), "phien-" + stt);
                 t.start();
             }
         }
     }
 
     /** Một phiên làm việc với một Client. */
-    private final class PhienClient implements Runnable {
+    private final class ClientSession implements Runnable {
 
         private final Socket socket;
         private final String ten;
         private SecretKey aes;   // null cho tới khi KEY_EXCHANGE thành công
 
-        PhienClient(Socket socket, String ten) {
+        ClientSession(Socket socket, String ten) {
             this.socket = socket;
             this.ten = ten;
         }
@@ -87,7 +87,7 @@ public class MockServer {
                     DataInputStream in = new DataInputStream(new BufferedInputStream(s.getInputStream()));
                     DataOutputStream out = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()))) {
 
-                GoiTin.guiMangByte(out, Protocol.HELLO, RSAUtil.encodePublic(rsa.getPublic()));
+                PacketIO.guiMangByte(out, Protocol.HELLO, RSAUtil.encodePublic(rsa.getPublic()));
 
                 while (true) {
                     byte loai;
@@ -106,7 +106,7 @@ public class MockServer {
                             return;
                         }
                         default -> {
-                            GoiTin.guiChuoi(out, Protocol.ERROR, "Loại gói không hỗ trợ: " + Protocol.tenGoi(loai));
+                            PacketIO.guiChuoi(out, Protocol.ERROR, "Loại gói không hỗ trợ: " + Protocol.tenGoi(loai));
                             log(ten + " gói lạ " + Protocol.tenGoi(loai) + " -> ngắt");
                             return;
                         }
@@ -118,46 +118,46 @@ public class MockServer {
         }
 
         private void xuLyKeyExchange(DataInputStream in, DataOutputStream out) throws IOException {
-            byte[] boc = GoiTin.docBytes(in);
+            byte[] boc = PacketIO.docBytes(in);
             try {
                 aes = RSAUtil.moKhoaAES(boc, rsa.getPrivate());
                 log(ten + " KEY_EXCHANGE: đã mở khóa AES-256");
-                GoiTin.guiChuoi(out, Protocol.KEY_OK, "Đã nhận khóa AES-256");
+                PacketIO.guiChuoi(out, Protocol.KEY_OK, "Đã nhận khóa AES-256");
             } catch (GeneralSecurityException e) {
                 aes = null;
-                GoiTin.guiChuoi(out, Protocol.ERROR, "Không mở được khóa AES: " + e.getMessage());
+                PacketIO.guiChuoi(out, Protocol.ERROR, "Không mở được khóa AES: " + e.getMessage());
                 log(ten + " KEY_EXCHANGE lỗi: " + e);
             }
         }
 
         private void xuLyText(DataInputStream in, DataOutputStream out) throws IOException {
-            byte[] iv = GoiTin.docBytes(in);
-            byte[] banMa = GoiTin.docBytes(in);
+            byte[] iv = PacketIO.docBytes(in);
+            byte[] banMa = PacketIO.docBytes(in);
             if (aes == null) {
-                GoiTin.guiChuoi(out, Protocol.ERROR, "Chưa trao đổi khóa AES");
+                PacketIO.guiChuoi(out, Protocol.ERROR, "Chưa trao đổi khóa AES");
                 return;
             }
             try {
                 String banRo = AESUtil.giaiMaChuoi(banMa, aes, iv);
-                String dem = KetQuaDemChuCai.dem(banRo);
+                String dem = LetterFrequency.dem(banRo);
                 log(ten + " TEXT  iv=" + AESUtil.hex(iv));
                 log(ten + "       bản mã (" + banMa.length + " byte) = " + AESUtil.hex(banMa));
                 log(ten + "       bản rõ = \"" + banRo + "\"");
                 log(ten + "       đếm    = " + dem);
                 // TODO CSDL: INSERT INTO tin_nhan(thoi_gian, iv_hex, ban_ma_hex, ban_ro, ket_qua_dem)
-                GoiTin.guiResult(out, banRo, dem);
+                PacketIO.guiResult(out, banRo, dem);
             } catch (GeneralSecurityException e) {
-                GoiTin.guiChuoi(out, Protocol.ERROR, "Giải mã thất bại (sai khóa?): " + e.getMessage());
+                PacketIO.guiChuoi(out, Protocol.ERROR, "Giải mã thất bại (sai khóa?): " + e.getMessage());
                 log(ten + " TEXT giải mã lỗi: " + e);
             }
         }
 
         private void xuLyFile(DataInputStream in, DataOutputStream out) throws IOException {
-            GoiTin.FileHeader h = GoiTin.docFileHeader(in);
+            PacketIO.FileHeader h = PacketIO.docFileHeader(in);
             if (aes == null) {
                 // vẫn phải đọc hết thân để không lệch luồng
                 in.skipNBytes(h.kichThuocBanMa);
-                GoiTin.guiChuoi(out, Protocol.ERROR, "Chưa trao đổi khóa AES");
+                PacketIO.guiChuoi(out, Protocol.ERROR, "Chưa trao đổi khóa AES");
                 return;
             }
             String tenAnToan = Paths.get(h.tenFile).getFileName().toString().replaceAll("[^\\p{L}\\p{N}._-]", "_");
@@ -175,13 +175,13 @@ public class MockServer {
                 }
                 log(ten + "       đã lưu " + dich + " sha256=" + hex);
                 // TODO CSDL: INSERT INTO tap_tin(thoi_gian, ten, kich_thuoc, sha256, duong_dan)
-                GoiTin.guiChuoi(out, Protocol.FILE_OK,
+                PacketIO.guiChuoi(out, Protocol.FILE_OK,
                         "Đã lưu " + dich.toAbsolutePath() + " (" + thuc + " byte)\nSHA-256: " + hex);
             } catch (GeneralSecurityException | IOException e) {
                 // Sai khóa -> doFinal ném BadPadding sau khi đã đọc hết thân file,
                 // nên luồng vẫn thẳng hàng cho gói sau: báo lỗi và tiếp tục phiên.
                 Files.deleteIfExists(dich);
-                GoiTin.guiChuoi(out, Protocol.ERROR, "Nhận file thất bại: " + e.getMessage());
+                PacketIO.guiChuoi(out, Protocol.ERROR, "Nhận file thất bại: " + e.getMessage());
                 log(ten + " FILE lỗi: " + e);
             }
         }

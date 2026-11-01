@@ -1,7 +1,7 @@
 package client;
 
 import common.AESUtil;
-import common.KetQuaDemChuCai;
+import common.LetterFrequency;
 import common.Protocol;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -47,8 +47,8 @@ import javax.crypto.SecretKey;
  * chưa có khóa.
  *
  * Quy tắc thread: mọi thao tác mạng chạy ngoài EDT (SwingWorker cho kết nối
- * và gửi file; thread nhận riêng trong {@link KetNoiClient}). Callback từ
- * mạng đi qua {@link BoNghe} và được đẩy về EDT bằng invokeLater trước khi
+ * và gửi file; thread nhận riêng trong {@link ClientConnection}). Callback từ
+ * mạng đi qua {@link NetworkEventHandler} và được đẩy về EDT bằng invokeLater trước khi
  * đụng vào component — Swing không an toàn đa luồng.
  */
 public class ClientFrame extends JFrame {
@@ -58,7 +58,7 @@ public class ClientFrame extends JFrame {
     private static final Color DO = new Color(180, 0, 0);
     private static final Font MONO = new Font(Font.MONOSPACED, Font.PLAIN, 12);
 
-    private final KetNoiClient ketNoi = new KetNoiClient(new BoNghe());
+    private final ClientConnection ketNoi = new ClientConnection(new NetworkEventHandler());
     private File fileDaChon;
     private boolean dangGuiFile;
 
@@ -420,7 +420,7 @@ public class ClientFrame extends JFrame {
 
     // ---------- Callback từ mạng (thread khác) → EDT ----------
 
-    private final class BoNghe implements KetNoiClient.NguoiNghe {
+    private final class NetworkEventHandler implements ClientConnection.ConnectionListener {
 
         @Override
         public void onKetNoi(String fingerprintRSA) {
@@ -446,13 +446,13 @@ public class ClientFrame extends JFrame {
         @Override
         public void onKetQua(String banRo, String demChuCai) {
             SwingUtilities.invokeLater(() -> {
-                Map<Character, Integer> dem = KetQuaDemChuCai.parse(demChuCai);
+                Map<Character, Integer> dem = LetterFrequency.parse(demChuCai);
                 mdlDem.setRowCount(0);
                 for (Map.Entry<Character, Integer> e : dem.entrySet()) {
                     mdlDem.addRow(new Object[]{e.getKey(), e.getValue()});
                 }
                 lblTong.setText("<html>Bản rõ Server giải mã: <b>" + rutGon(banRo, 50) + "</b><br>"
-                        + dem.size() + " chữ cái khác nhau, tổng " + KetQuaDemChuCai.tongChuCai(dem) + " lần</html>");
+                        + dem.size() + " chữ cái khác nhau, tổng " + LetterFrequency.tongChuCai(dem) + " lần</html>");
                 ghiNhatKy("← RESULT: bản rõ \"" + rutGon(banRo, 40) + "\" | đếm " + demChuCai);
             });
         }

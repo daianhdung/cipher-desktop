@@ -10,11 +10,13 @@ folder is preserved and is not a dependency of this module.
 
 ## Launch Demo Mode
 
+Run source commands from the repository root.
+
 Requirements for building: JDK 21, Maven 3.9+, Python 3.9+, and internet for the
 first JavaFX dependency download. Run on a desktop, not a headless server.
 
 ```bash
-cd /Users/daianhdung/Documents/PTIT/HKVII_Lap-trinh-mang/DoAn_ChatAES/javafx-preview
+cd javafx-preview
 python3 scripts/demo.py run
 ```
 

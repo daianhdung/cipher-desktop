@@ -51,10 +51,14 @@ the actual standalone PreviewLauncher / PreviewApplication entry point.
 
 ### Boundary/preservation checks
 
-The existing project was checksummed before this work. All **36** captured source,
-configuration and dependency files remain byte-for-byte unchanged. The baseline
+During the completed mock-only JavaFX iteration, all **36** captured source,
+configuration and dependency files remained byte-for-byte unchanged. The historical baseline
 is retained at [docs/verification/preserved-files.sha256](docs/verification/preserved-files.sha256).
-No existing Swing/TCP code was refactored or removed.
+No existing Swing/TCP code was refactored during that UI iteration.
+
+A subsequent user-requested naming cleanup renamed Vietnamese Java types to English,
+updated references, and ran the existing regression suite. See [CLASS_NAMING.md](../docs/CLASS_NAMING.md).
+The historical hashes describe the earlier UI-only checkpoint, not the post-rename files.
 
 The preview source has no imports of the legacy packages, `java.net`, `javax.crypto`,
 `java.security`, or `java.sql`. Controllers/components have no mock-implementation

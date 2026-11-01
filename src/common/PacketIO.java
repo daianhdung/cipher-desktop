@@ -14,9 +14,9 @@ import java.io.IOException;
  * Mọi hàm ở đây đều đồng bộ (blocking). Bên gọi phải flush sau khi ghi xong
  * một gói trọn vẹn; ghi nửa gói rồi flush sẽ làm bên nhận chờ mãi.
  */
-public final class GoiTin {
+public final class PacketIO {
 
-    private GoiTin() {
+    private PacketIO() {
     }
 
     public static void ghiBytes(DataOutputStream out, byte[] data) throws IOException {

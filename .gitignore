@@ -1,6 +1,26 @@
+# Generated output
 build/
+dist/
+target/
+*.class
+*.part
+__pycache__/
+
+# Runtime/user data
 server-data/
 server_files/
 client-downloads/
-*.part
-__pycache__/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Local IDE and machine settings
+nbproject/private/
+.idea/
+.vscode/
+.DS_Store
+.env
+.env.*
+!.env.example

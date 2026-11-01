@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /** Điều khiển ClientFrame qua reflection và chụp ảnh nội dung cửa sổ ra PNG (không cần quyền Screen Recording). */
-public class ChupAnh {
+public class ScreenshotCapture {
     static ClientFrame f; static File out;
     static Object field(String n) throws Exception { Field x = ClientFrame.class.getDeclaredField(n); x.setAccessible(true); return x.get(f); }
     static void set(String n, Object v) throws Exception { Field x = ClientFrame.class.getDeclaredField(n); x.setAccessible(true); x.set(f, v); }

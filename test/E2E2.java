@@ -1,9 +1,9 @@
-import client.KetNoiClient;
+import client.ClientConnection;
 import java.util.concurrent.*;
 public class E2E2 {
     public static void main(String[] a) throws Exception {
         BlockingQueue<String> q = new LinkedBlockingQueue<>();
-        KetNoiClient c = new KetNoiClient(new KetNoiClient.NguoiNghe() {
+        ClientConnection c = new ClientConnection(new ClientConnection.ConnectionListener() {
             public void onKetNoi(String fp) { q.add("KETNOI"); }
             public void onKeyOk(String s) { q.add("KEYOK"); }
             public void onKetQua(String r, String d) { q.add("RESULT"); }

@@ -1,7 +1,7 @@
 package client;
 
 import common.AESUtil;
-import common.GoiTin;
+import common.PacketIO;
 import common.Protocol;
 import common.RSAUtil;
 import java.io.BufferedInputStream;
@@ -26,7 +26,7 @@ import javax.crypto.SecretKey;
  * Phần mạng của Client: socket TCP, handshake, gửi TEXT/FILE, thread nhận.
  *
  * Tách khỏi {@link ClientFrame} để GUI không biết gì về byte và socket, còn
- * lớp này không biết gì về Swing. Giao tiếp ngược lên GUI qua {@link NguoiNghe};
+ * lớp này không biết gì về Swing. Giao tiếp ngược lên GUI qua {@link ConnectionListener};
  * mọi callback được gọi từ thread nhận (hoặc thread gửi file), KHÔNG phải
  * EDT — bên GUI phải tự bọc {@code SwingUtilities.invokeLater}.
  *
@@ -34,10 +34,10 @@ import javax.crypto.SecretKey;
  * ghi được khóa bằng {@code synchronized(out)} để header FILE và thân file
  * không bị xen gói TEXT vào giữa; đọc chỉ có một thread nên không cần khóa.
  */
-public class KetNoiClient {
+public class ClientConnection {
 
     /** Sự kiện từ mạng đẩy lên GUI. */
-    public interface NguoiNghe {
+    public interface ConnectionListener {
 
         void onKetNoi(String fingerprintRSA);
 
@@ -53,7 +53,7 @@ public class KetNoiClient {
         void onNgat(String lyDo);
     }
 
-    private final NguoiNghe nghe;
+    private final ConnectionListener nghe;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -65,7 +65,7 @@ public class KetNoiClient {
     private byte[] ivCuoi;
     private byte[] banMaCuoi;
 
-    public KetNoiClient(NguoiNghe nghe) {
+    public ClientConnection(ConnectionListener nghe) {
         this.nghe = nghe;
     }
 
@@ -84,7 +84,7 @@ public class KetNoiClient {
             s.close();
             throw new IOException("Server không gửi HELLO (nhận " + Protocol.tenGoi(loai) + ")");
         }
-        PublicKey pub = RSAUtil.decodePublic(GoiTin.docBytes(i));
+        PublicKey pub = RSAUtil.decodePublic(PacketIO.docBytes(i));
         s.setSoTimeout(0);              // sau đó chờ vô hạn, thread nhận tự thoát khi socket đóng
 
         this.socket = s;
@@ -130,7 +130,7 @@ public class KetNoiClient {
         SecretKey k = AESUtil.taoKhoa(khoaNguoiDung);
         byte[] boc = RSAUtil.bocKhoaAES(k, rsaServer);
         synchronized (out) {
-            GoiTin.guiMangByte(out, Protocol.KEY_EXCHANGE, boc);
+            PacketIO.guiMangByte(out, Protocol.KEY_EXCHANGE, boc);
         }
         aes = k;    // dùng ngay; nếu Server trả ERROR thì GUI sẽ báo
         return k;
@@ -148,7 +148,7 @@ public class KetNoiClient {
         byte[] iv = AESUtil.taoIV();
         byte[] banMa = AESUtil.maHoaChuoi(vanBan, aes, iv);
         synchronized (out) {
-            GoiTin.guiText(out, iv, banMa);
+            PacketIO.guiText(out, iv, banMa);
         }
         ivCuoi = iv;
         banMaCuoi = banMa;
@@ -164,7 +164,7 @@ public class KetNoiClient {
         byte[] iv = AESUtil.taoIV();
         long banMa = AESUtil.kichThuocBanMa(kichThuoc);
         synchronized (out) {
-            GoiTin.guiFileHeader(out, f.getName(), kichThuoc, iv, banMa);
+            PacketIO.guiFileHeader(out, f.getName(), kichThuoc, iv, banMa);
             try (InputStream fin = new BufferedInputStream(Files.newInputStream(f.toPath()))) {
                 AESUtil.maHoaLuong(fin, out, aes, iv, kichThuoc, tienDo);
             }

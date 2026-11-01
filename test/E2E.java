@@ -1,8 +1,8 @@
-import client.KetNoiClient;
+import client.ClientConnection;
 import java.io.File;
 import java.util.concurrent.*;
 
-/** Kịch bản E2E không GUI: dùng KetNoiClient thật nói chuyện với MockServer thật. */
+/** Kịch bản E2E không GUI: dùng ClientConnection thật nói chuyện với MockServer thật. */
 public class E2E {
     static BlockingQueue<String> q = new LinkedBlockingQueue<>();
     static String cho(String prefix) throws Exception {
@@ -12,7 +12,7 @@ public class E2E {
         return s;
     }
     public static void main(String[] a) throws Exception {
-        KetNoiClient c = new KetNoiClient(new KetNoiClient.NguoiNghe() {
+        ClientConnection c = new ClientConnection(new ClientConnection.ConnectionListener() {
             public void onKetNoi(String fp) { q.add("KETNOI " + fp); }
             public void onKeyOk(String s) { q.add("KEYOK " + s); }
             public void onKetQua(String r, String d) { q.add("RESULT " + r + " | " + d); }

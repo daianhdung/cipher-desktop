@@ -5,7 +5,7 @@ package common;
  *
  * Mỗi gói tin trên TCP = 1 byte loại + payload. Payload ghi bằng
  * DataOutputStream: chuỗi dùng writeUTF, mảng byte dùng int độ dài + bytes
- * (xem {@link GoiTin}). Vì TCP là luồng byte không có ranh giới, độ dài
+ * (xem {@link PacketIO}). Vì TCP là luồng byte không có ranh giới, độ dài
  * đi trước là cách duy nhất để bên nhận biết gói kết thúc ở đâu.
  *
  * Đặc tả đầy đủ: docs/DoAn_PROTOCOL.md

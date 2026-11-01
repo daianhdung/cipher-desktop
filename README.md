@@ -1,38 +1,83 @@
-# Đề tài 8 — Java TCP AES Chat
+# Cipher Desktop
 
-Bản multi-user mở rộng từ project Swing/AES hiện có. Java 21, TCP Socket, AES-GCM,
-RSA-OAEP, SQLite JDBC. Server giải mã để đếm chữ cái: **không phải E2EE**.
-Username không phải xác thực tài khoản.
+Java 21 network programming coursework: a modern JavaFX frontend preview alongside
+the existing Java Swing/TCP implementation.
+
+**Current UI iteration is mock-first.** Chat, Encryption Lab and Server Monitoring
+use replaceable service interfaces and in-memory fixtures. The JavaFX preview makes
+no TCP connections and performs no real encryption, file-content transfer or database operations.
+
+## Run the JavaFX demo
+
+Requirements: Java 21, Maven 3.9+, Python 3.9+, and a desktop session.
+From the repository root:
 
 ```bash
-python3 scripts/build.py
-java -jar dist/chat-server.jar --host 0.0.0.0 --port 5555 --data server-data
-# Terminal khác: chạy 3 lần, nhập tên Alice/Bob/Charlie
-java -jar dist/chat-client.jar
+cd javafx-preview
+python3 scripts/demo.py run
 ```
 
-Giữ `dist/lib` cạnh JAR khi copy. Client cho nhập Server IP/cổng; laptop khác dùng IP
-LAN của máy Server. File nhận ở `client-downloads/<username>`. DB ở `server-data/chat.db`.
+An independent simulated monitoring window:
+
+```bash
+python3 scripts/demo.py run --monitor
+```
+
+Build once, then launch without Maven or an IDE:
+
+```bash
+python3 scripts/demo.py build
+./target/demo/run-demo.sh
+# Windows: target\demo\run-demo.cmd
+```
+
+The portable bundle requires Java 21. Build it on the target operating system
+because JavaFX native libraries are platform-specific.
+
+## Preview
+
+![Chat application demo](javafx-preview/docs/screenshots/chat.png)
+
+[Encryption Lab](javafx-preview/docs/screenshots/encryption-lab.png) ·
+[Server Monitoring](javafx-preview/docs/screenshots/server-monitoring.png)
+
+## Project layout
+
+- `javafx-preview/`: independent JavaFX UI, FXML, CSS, service interfaces and mocks.
+- `src/client/`, `src/common/`, `src/server/`: preserved legacy Swing/AES demo.
+- `src/chat/`: existing multi-user Swing/TCP Server and Client implementation.
+- `test/`, `scripts/`: existing application build and regression/integration tests.
+- `docs/`: protocol, coursework requirements, architecture and existing Server documentation.
+
+The existing backend is included for reference and future integration. The JavaFX
+module does not depend on it. Backend behavior has not been redesigned in this iteration.
+
+## Verification
+
+```bash
+# JavaFX: real toolkit, packaged FXML/CSS, interactions, metrics, screenshots
+cd javafx-preview
+python3 scripts/demo.py verify
+```
+
+From the repository root, test the existing Swing/TCP implementation separately:
 
 ```bash
 python3 scripts/test.py
-# Có desktop: test Swing thật
-java -Xmx128m -cp "build/classes:build/test-v2:lib/*" ChatGuiIntegration build/chat-gui.png
 ```
 
-Windows dùng `;` thay `:` trong classpath. NetBeans vẫn mở project được; main Client
-là `client.ClientMain`, Server mới là `chat.server.ServerMain`.
-Bản cũ: `java -jar dist/chat-client.jar --legacy`, đi cùng `server.MockServer` trên port riêng.
+This command starts local test Servers and uses temporary data and ports.
+English Java type names use PascalCase; see [naming cleanup](docs/CLASS_NAMING.md).
 
-- [Hướng dẫn demo 1/2 laptop](../docs/DEMO_GUIDE.md)
-- [Trạng thái và giới hạn đã kiểm chứng](../docs/IMPLEMENTATION_STATUS.md)
-- [Yêu cầu / audit](../docs/REQUIREMENTS.md)
-- [Kiến trúc](../docs/ARCHITECTURE.md)
-- [Giao thức và audit mã hóa](../docs/PROTOCOL.md)
-- [CSDL và giới hạn lịch sử/khóa](../docs/DATABASE.md)
-- [Sequence diagrams](../docs/SEQUENCE_DIAGRAMS.md)
-- [Test plan](../docs/TEST_PLAN.md)
+## Documentation
 
-Chat text cũ sau Server restart vẫn có metadata/thống kê, nhưng không thể giải mã
-vì session key không lưu xuống đĩa. File Server lưu bản rõ để tải lại sau restart.
-Chỉ dùng demo trên LAN tin cậy; không có username authentication hay chứng chỉ Server.
+- [JavaFX launch guide](javafx-preview/README.md)
+- [UI architecture](javafx-preview/ARCHITECTURE.md)
+- [Components and CSS design system](javafx-preview/COMPONENTS.md)
+- [Actual JavaFX verification results](javafx-preview/VERIFICATION.md)
+- [Existing Swing/TCP guide](docs/SWING_README.md)
+- [Existing protocol](docs/PROTOCOL.md)
+- [Existing database design](docs/DATABASE.md)
+
+No real authentication or encryption is implied by the mock demo. The existing
+Server decrypts coursework messages for letter counting and is not E2EE.

@@ -164,7 +164,7 @@ public final class ChatServer implements AutoCloseable {
         void text(Packet p) throws Exception {
             boolean lab=p.type().equals("LAB"); Session other=lab?null:recipient(p.to());
             if(p.text().isBlank() || p.text().getBytes(StandardCharsets.UTF_8).length>8192) throw new IllegalArgumentException("Văn bản rỗng hoặc vượt 8192 byte UTF-8");
-            String messageId=UUID.randomUUID().toString(); String stats=KetQuaDemChuCai.dem(p.text());
+            String messageId=UUID.randomUUID().toString(); String stats=LetterFrequency.dem(p.text());
             byte[] stored=Crypto.seal(key,p.text().getBytes(StandardCharsets.UTF_8),"history/"+messageId);
             repository.message(messageId,user,lab?null:other.user,p.type(),keyId,stored,stats);
             String time=ChatRepository.now();

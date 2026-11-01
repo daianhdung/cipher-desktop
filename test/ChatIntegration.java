@@ -61,7 +61,7 @@ public class ChatIntegration {
             }
             String req=alice.client.text("Bob","Xin chào Bob — Đại Anh Dũng");
             Packet result=alice.waitFor(p->p.type().equals("RESULT")&&p.id().equals(req));
-            check(result.extra().equals(KetQuaDemChuCai.dem(result.text())),"server counts Vietnamese letters");
+            check(result.extra().equals(LetterFrequency.dem(result.text())),"server counts Vietnamese letters");
             Packet message=bob.type("CHAT");
             check(message.from().equals("Alice") && charlie.log.stream().noneMatch(p->p.type().equals("CHAT")),"private routing excludes Charlie");
             bob.client.text("Alice","Hello Alice"); alice.waitFor(p->p.type().equals("CHAT")&&p.from().equals("Bob"));
@@ -74,7 +74,7 @@ public class ChatIntegration {
             System.out.println("PASS concurrent messages and reply");
             alice.client.rotate("khóa do người dùng nhập");
             alice.client.text("Bob","after rotation"); bob.waitFor(p->p.type().equals("CHAT")&&p.text().equals("after rotation"));
-            String lab=alice.client.lab("Đà 123 Aa"); check(alice.waitFor(p->p.type().equals("RESULT")&&p.id().equals(lab)).extra().equals(KetQuaDemChuCai.dem("Đà 123 Aa")),"rotation and standalone Lab preserved");
+            String lab=alice.client.lab("Đà 123 Aa"); check(alice.waitFor(p->p.type().equals("RESULT")&&p.id().equals(lab)).extra().equals(LetterFrequency.dem("Đà 123 Aa")),"rotation and standalone Lab preserved");
             check(!alice.client.preview("same").equals(alice.client.preview("same")),"fresh GCM nonces");
             Path file=dir.resolve("large.bin");
             try(var out=Files.newOutputStream(file)) { byte[] bytes=new byte[65536];new Random(7).nextBytes(bytes); for(int i=0;i<512;i++) out.write(bytes); }

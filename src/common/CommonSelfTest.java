@@ -11,10 +11,10 @@ import javax.crypto.SecretKey;
 
 /**
  * Tự kiểm tra package common bằng main() — không cần JUnit.
- * Chạy: java -cp build/classes common.KiemTraCommon
+ * Chạy: java -cp build/classes common.CommonSelfTest
  * Mọi dòng phải in OK; có FAIL thì exit code 1.
  */
-public class KiemTraCommon {
+public class CommonSelfTest {
 
     private static int loi = 0;
 
@@ -86,13 +86,13 @@ public class KiemTraCommon {
         check("fingerprint có dạng XX:XX", RSAUtil.fingerprint(cap.getPublic()).matches("([0-9A-F]{2}:){7}[0-9A-F]{2}"));
 
         // 6. Đếm chữ cái
-        String dem = KetQuaDemChuCai.dem("Xin chao AES 123");
+        String dem = LetterFrequency.dem("Xin chao AES 123");
         check("đếm 'Xin chao AES 123' -> " + dem, dem.equals("a=2;c=1;e=1;h=1;i=1;n=1;o=1;s=1;x=1"));
-        Map<Character, Integer> p = KetQuaDemChuCai.parse(dem);
+        Map<Character, Integer> p = LetterFrequency.parse(dem);
         check("parse giữ thứ tự, a đầu tiên", p.keySet().iterator().next() == 'a' && p.get('a') == 2);
-        check("tổng chữ cái = 10", KetQuaDemChuCai.tongChuCai(p) == 10);
-        check("chữ Việt có dấu là chữ cái", KetQuaDemChuCai.dem("Đà").equals("à=1;đ=1"));
-        check("chuỗi rỗng -> rỗng", KetQuaDemChuCai.dem("123 !?").isEmpty() && KetQuaDemChuCai.parse("").isEmpty());
+        check("tổng chữ cái = 10", LetterFrequency.tongChuCai(p) == 10);
+        check("chữ Việt có dấu là chữ cái", LetterFrequency.dem("Đà").equals("à=1;đ=1"));
+        check("chuỗi rỗng -> rỗng", LetterFrequency.dem("123 !?").isEmpty() && LetterFrequency.parse("").isEmpty());
 
         System.out.println();
         System.out.println(loi == 0 ? "TẤT CẢ OK" : loi + " kiểm tra FAIL");
