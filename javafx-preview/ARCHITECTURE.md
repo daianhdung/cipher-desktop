@@ -1,7 +1,9 @@
 # Frontend architecture
 
-This module is intentionally separate from the parent Ant/NetBeans project.
-Its Maven build compiles only `javafx-preview/src`. It has no source or runtime
+The root Maven project builds the JavaFX frontend from the standard
+`src/main/java`, `src/main/resources` and `src/test/java` directories.
+There is one Maven/NetBeans project; `javafx-preview/` holds documentation and
+packaging scripts, without a nested project descriptor. It has no source or runtime
 dependency on `chat.client`, `chat.server`, `common`, Swing, JDBC or SQLite.
 
 ```text

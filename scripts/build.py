@@ -21,7 +21,7 @@ def build():
             part.replace(path)
         if hashlib.sha256(path.read_bytes()).hexdigest()!=digest: raise RuntimeError('Dependency checksum mismatch: '+name)
     classes=ROOT/'build/classes'; classes.mkdir(parents=True,exist_ok=True)
-    subprocess.run(['javac','--release','21','-encoding','UTF-8','-d',str(classes),*map(str,(ROOT/'src').rglob('*.java'))],check=True)
+    subprocess.run(['javac','--release','21','-encoding','UTF-8','-d',str(classes),*map(str,(file for package in ('client','common','server','chat') for file in (ROOT/'src'/package).rglob('*.java')))],check=True)
     dist=ROOT/'dist'; (dist/'lib').mkdir(parents=True,exist_ok=True)
     for name in DEPS: shutil.copy2(lib/name,dist/'lib'/name)
     shutil.copy2(lib/'THIRD_PARTY.md',dist/'THIRD_PARTY.md')

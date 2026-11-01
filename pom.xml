@@ -11,9 +11,6 @@
   <!-- The default application compiles only the JavaFX frontend. Legacy Swing/TCP
        sources remain available through scripts/build.py and scripts/test.py. -->
   <build>
-    <sourceDirectory>${project.basedir}/javafx-preview/src/main/java</sourceDirectory>
-    <testSourceDirectory>${project.basedir}/javafx-preview/src/test/java</testSourceDirectory>
-    <resources><resource><directory>${project.basedir}/javafx-preview/src/main/resources</directory></resource></resources>
     <plugins>
     <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version></plugin>
     <plugin><groupId>org.openjfx</groupId><artifactId>javafx-maven-plugin</artifactId><version>0.0.8</version><configuration><mainClass>studio.cipher.PreviewLauncher</mainClass></configuration></plugin>

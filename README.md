@@ -17,7 +17,10 @@ In NetBeans, close the previously opened Ant/Swing project, then use **File → 
 Project** to reopen this repository root (`pom.xml`). Set **JDK 21**, select
 **Set as Main Project**, and press **F6 / Run Project**. The checked-in
 `nbactions.xml` maps Run to `javafx:run`; no main-class chooser is needed.
-Reopening once is necessary if NetBeans has cached the old project type.
+Close any previously opened `javafx-preview` project as well. There is only one
+Maven project, at the repository root; JavaFX sources use the standard
+`src/main/java` and `src/test/java` directories. Reopen the root project once if
+NetBeans has cached the old project or source ownership.
 
 From the repository root:
 
@@ -64,7 +67,10 @@ because JavaFX native libraries are platform-specific.
 
 ## Project layout
 
-- `javafx-preview/`: independent JavaFX UI, FXML, CSS, service interfaces and mocks.
+- `src/main/java/`: JavaFX UI, service interfaces and in-memory mocks.
+- `src/main/resources/`: FXML layouts and JavaFX CSS.
+- `src/test/java/`: JavaFX verification driver.
+- `javafx-preview/`: demo packaging scripts, documentation and screenshots.
 - `src/client/`, `src/common/`, `src/server/`: preserved legacy Swing/AES demo.
 - `src/chat/`: existing multi-user Swing/TCP Server and Client implementation.
 - `test/`, `scripts/`: existing application build and regression/integration tests.

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<actions>
-  <!-- NetBeans Run Project (F6) opens the JavaFX frontend. -->
-  <action>
-    <actionName>run</actionName>
-    <goals><goal>javafx:run</goal></goals>
-  </action>
-</actions>

@@ -5,15 +5,16 @@ The Chat, Encryption Lab and Server Monitoring screens share one design system,
 service interfaces and in-memory demo state.
 
 **No TCP connection, real authentication, AES/RSA operation, file-content transfer,
-or database operation occurs.** The working Swing/TCP project in the parent
-folder is preserved and is not a dependency of this module.
+or database operation occurs.** The existing Swing/TCP sources are preserved and are not dependencies of the frontend build.
 
 ## Default application in NetBeans
 
 The repository root now also opens this JavaFX frontend by default. Open the root
 `pom.xml` project in NetBeans with JDK 21 and press **F6 / Run Project**. Close and
-reopen an old Ant project once to refresh its project type. This module can still
-be opened independently; both projects map Run to `javafx:run`.
+reopen an old Ant project once to refresh its project type. Close any previously opened `javafx-preview` project too. The root `pom.xml` is
+the only Maven project. Source Packages are under `src/main/java`, Test Packages
+under `src/test/java`, and FXML/CSS under `src/main/resources`. This directory now
+contains documentation and demo packaging scripts, not a second project.
 
 ## Launch Demo Mode
 
