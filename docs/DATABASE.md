@@ -15,6 +15,77 @@ Mặc định tính từ working directory: `server-data/chat.db`, `chat.db-wal`
 | letter_statistics | message_id PK/FK, chuỗi thống kê chữ cái |
 | file_attachments | UUID PK, sender/recipient FK, UTC, tên hiển thị, size, SHA-256, status, path |
 
+## ERD — cấu trúc database hiện tại
+
+Sơ đồ dưới đây bám theo câu lệnh `CREATE TABLE` trong
+[`ChatRepository.java`](../src/chat/server/ChatRepository.java), thuộc backend
+Swing/TCP hiện có. JavaFX Demo hiện chỉ dùng dữ liệu trong RAM, chưa kết nối DB này.
+Mở file trên GitHub để xem sơ đồ Mermaid được render.
+
+```mermaid
+erDiagram
+    users ||--o{ client_sessions : "username"
+    users ||--o{ messages : "sender"
+    users ||--o{ file_attachments : "sender"
+    users ||--o{ file_attachments : "recipient"
+    messages ||--o| letter_statistics : "message_id"
+
+    users {
+        TEXT username PK
+        TEXT created_at
+    }
+
+    client_sessions {
+        TEXT id PK "UUID"
+        TEXT username FK
+        TEXT remote "nullable"
+        TEXT joined_at
+        TEXT left_at "nullable; chua ngat ket noi"
+    }
+
+    messages {
+        TEXT id PK "UUID"
+        TEXT sender FK
+        TEXT recipient "nullable; khong co FK"
+        TEXT created_at
+        TEXT kind "TEXT hoac LAB"
+        TEXT key_id "UUID khoa; khong luu khoa that"
+        BLOB ciphertext "nonce + ciphertext + tag"
+    }
+
+    letter_statistics {
+        TEXT message_id PK, FK
+        TEXT statistics
+    }
+
+    file_attachments {
+        TEXT id PK "UUID"
+        TEXT sender FK
+        TEXT recipient FK
+        TEXT created_at
+        TEXT name
+        INTEGER size "byte"
+        TEXT sha256 "nullable"
+        TEXT status
+        TEXT path "duong dan file tren server"
+    }
+```
+
+Cách đọc và các điểm cần phân biệt:
+
+- `PK`: khóa chính; `FK`: khóa ngoại. `||` là đúng một, `o{` là từ không đến
+  nhiều, `o|` là không hoặc một.
+- Một user có thể có nhiều phiên kết nối, gửi nhiều tin nhắn và gửi/nhận nhiều file.
+- Mỗi dòng thống kê thuộc đúng một tin nhắn. Schema cho phép tin nhắn chưa có
+  thống kê; hàm `message()` hiện ghi cả hai trong cùng transaction.
+- `messages.recipient` hiện là chuỗi username có thể null, **chưa khai báo FK**,
+  nên sơ đồ không vẽ quan hệ khóa ngoại cho trường này. Ngược lại,
+  `file_attachments.recipient` có FK đến `users.username`.
+- `file_attachments` chưa có `message_id`: file và tin nhắn là hai loại bản ghi
+  riêng, không có quan hệ FK trực tiếp dù UI có thể hiển thị file như tin đính kèm.
+- `key_id` không trỏ đến bảng khóa nào. File thật được lưu ngoài database;
+  bảng `file_attachments` chỉ giữ metadata và đường dẫn.
+
 Không tạo conversation table: v1 extension chỉ có chat 1–1, cặp sender/recipient
 đã định danh cuộc trò chuyện. Query lịch sử luôn gồm username của chính phiên.
 Prepared statements cho mọi tham số người dùng; transaction gộp message + thống kê
