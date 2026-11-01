@@ -79,6 +79,25 @@ because JavaFX native libraries are platform-specific.
 The existing backend is included for reference and future integration. The JavaFX
 module does not depend on it. Backend behavior has not been redesigned in this iteration.
 
+## Java code formatting
+
+The JavaFX application and its verification code use Google Java Format (GOOGLE
+style, 2-space indentation), configured through Spotless in the root `pom.xml`.
+Run with JDK 21 from the repository root:
+
+```bash
+mvn spotless:apply   # Format Java source and test files
+mvn spotless:check   # Check formatting without changing files
+mvn verify           # Build and check formatting
+```
+
+In NetBeans, use **Run Maven → Goals…** with `spotless:apply` or `spotless:check`.
+The formatter targets `src/main/java` and `src/test/java`; existing Swing/TCP
+sources, FXML and CSS are outside this formatting scope. Formatter versions are
+pinned to keep output consistent between machines.
+
+[Spotless Maven documentation](https://github.com/diffplug/spotless/tree/main/plugin-maven).
+
 ## Verification
 
 ```bash
