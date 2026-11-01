@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="studio.cipher.ui.controllers.ShellController" fx:id="root" styleClass="app-root">
+  <BorderPane fx:id="workspace">
+    <left>
+      <VBox fx:id="rail" styleClass="navigation-rail" alignment="TOP_CENTER" spacing="12" prefWidth="80" minWidth="80">
+        <StackPane fx:id="brand" styleClass="brand-mark"><Label text="C" styleClass="brand-letter"/></StackPane>
+        <Region prefHeight="12"/>
+        <Button fx:id="chatNav" id="nav-chat" onAction="#showChat" styleClass="nav-button" accessibleText="Chat"><tooltip><Tooltip text="Chat workspace"/></tooltip></Button>
+        <Button fx:id="labNav" id="nav-lab" onAction="#showLab" styleClass="nav-button" accessibleText="Encryption Lab"><tooltip><Tooltip text="Encryption Lab"/></tooltip></Button>
+        <Button fx:id="monitorNav" id="nav-monitor" onAction="#showMonitor" styleClass="nav-button" accessibleText="Server Monitoring"><tooltip><Tooltip text="Server Monitoring · demo"/></tooltip></Button>
+        <Region VBox.vgrow="ALWAYS"/>
+        <Button fx:id="settings" onAction="#showSettings" styleClass="nav-button" accessibleText="Demo settings"><tooltip><Tooltip text="About this prototype"/></tooltip></Button>
+        <Separator prefWidth="32" maxWidth="32"/>
+        <StackPane fx:id="profileAvatar"/>
+        <Button fx:id="signOut" id="sign-out" onAction="#logout" styleClass="nav-button" accessibleText="Sign out"><tooltip><Tooltip text="Sign out of demo"/></tooltip></Button>
+      </VBox>
+    </left>
+    <center>
+      <BorderPane>
+        <top>
+          <HBox alignment="CENTER_LEFT" spacing="12" styleClass="workspace-header">
+            <Label text="Cipher" styleClass="workspace-name"/><Label text="/" styleClass="divider-text"/>
+            <Label fx:id="pageTitle" styleClass="page-title" text="Messages"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="●  DEMO MODE" styleClass="demo-badge"><tooltip><Tooltip text="In-memory fixtures only. No TCP, encryption, or database services are used."/></tooltip></Label>
+            <Label text="Local preview" styleClass="muted,header-hint"/>
+            <Button fx:id="help" onAction="#showHelp" styleClass="icon-button" accessibleText="About Demo Mode"/>
+          </HBox>
+        </top>
+        <center><StackPane fx:id="screenContainer"/></center>
+      </BorderPane>
+    </center>
+  </BorderPane>
+  <VBox fx:id="toastBox" visible="false" managed="false" mouseTransparent="true" styleClass="toast" StackPane.alignment="BOTTOM_CENTER"><StackPane.margin><Insets bottom="24"/></StackPane.margin><Label fx:id="toastText" wrapText="true"/></VBox>
+  <StackPane fx:id="loginOverlay" styleClass="login-overlay">
+    <VBox fx:id="loginCard" styleClass="login-card" maxWidth="430" maxHeight="520" spacing="19" alignment="TOP_LEFT">
+      <HBox alignment="CENTER_LEFT" spacing="12"><StackPane styleClass="brand-mark"><Label text="C" styleClass="brand-letter"/></StackPane><VBox spacing="3"><Label text="CIPHER DESKTOP" styleClass="eyebrow"/><Label text="A network programming studio" styleClass="muted"/></VBox></HBox>
+      <Region prefHeight="4"/>
+      <Label text="Your workspace,&#10;in sync." styleClass="login-title"/>
+      <Label text="Explore a thoughtful chat experience, a visual encryption lab, and a live-feeling dashboard." wrapText="true" styleClass="body-copy"/>
+      <VBox spacing="8"><Label text="Your display name" styleClass="field-label"/><TextField fx:id="username" id="login-username" promptText="Enter a demo name" onAction="#login"/><Label fx:id="loginError" text="No password. This is a simulated sign-in." wrapText="true" styleClass="tiny,muted"/></VBox>
+      <Button fx:id="loginButton" id="login-submit" text="Enter demo workspace    →" maxWidth="Infinity" onAction="#login" styleClass="primary-button"/>
+      <HBox spacing="8" alignment="CENTER_LEFT"><Label text="●  DEMO MODE" styleClass="demo-badge"/><Label text="No connection required" styleClass="tiny,muted"/></HBox>
+    </VBox>
+  </StackPane>
+</StackPane>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="studio.cipher.ui.controllers.ChatController" fx:id="chatRoot" styleClass="chat-screen">
+  <left>
+    <VBox styleClass="conversations-panel" prefWidth="272" minWidth="248" maxWidth="290" spacing="0">
+      <VBox spacing="16" styleClass="conversation-top">
+        <HBox alignment="CENTER_LEFT"><Label text="Messages" styleClass="screen-title-small"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="onlineCount" styleClass="count-badge"/></HBox>
+        <HBox styleClass="search-box" alignment="CENTER_LEFT" spacing="8"><StackPane fx:id="searchIcon"/><TextField fx:id="search" id="conversation-search" promptText="Search conversations" HBox.hgrow="ALWAYS" styleClass="search-input"/></HBox>
+        <HBox alignment="CENTER_LEFT"><Label text="YOUR CONVERSATIONS" styleClass="eyebrow"/><Region HBox.hgrow="ALWAYS"/><Button fx:id="newChat" onAction="#focusSearch" styleClass="icon-button" accessibleText="Find a conversation"/></HBox>
+      </VBox>
+      <ListView fx:id="conversationList" id="conversation-list" VBox.vgrow="ALWAYS" styleClass="conversation-list"/>
+      <VBox spacing="10" styleClass="sidebar-promo" minHeight="170" prefHeight="170" maxHeight="170"><Label text="A little curiosity.&#10;A lot to discover." styleClass="promo-title" minHeight="38"/><Label text="Explore how a message moves through an encryption workflow." wrapText="true" styleClass="promo-description" minHeight="34"/><Button text="Open Encryption Lab   ↗" onAction="#openLab" styleClass="promo-button"/></VBox>
+      <HBox fx:id="myProfile" alignment="CENTER_LEFT" spacing="10" styleClass="my-profile"><StackPane fx:id="myAvatar"/><VBox spacing="4" HBox.hgrow="ALWAYS"><Label fx:id="myName" styleClass="person-name"/><Label text="●  Demo workspace" styleClass="tiny,muted"/></VBox><Button fx:id="profileInfo" onAction="#aboutProfile" styleClass="icon-button" accessibleText="Demo account information"/></HBox>
+    </VBox>
+  </left>
+  <center>
+    <BorderPane fx:id="conversationPane" styleClass="conversation-pane">
+      <top><HBox styleClass="conversation-header" alignment="CENTER_LEFT" spacing="12"><StackPane fx:id="peerAvatar"/><VBox spacing="5" HBox.hgrow="ALWAYS"><Label fx:id="peerName" styleClass="conversation-title"/><Label fx:id="peerStatus" styleClass="tiny,muted"/></VBox><Button fx:id="simulateReply" onAction="#incoming" styleClass="icon-button" accessibleText="Simulate incoming reply"/><Button fx:id="detailsToggle" id="details-toggle" onAction="#toggleDetails" styleClass="icon-button" accessibleText="Toggle conversation details"/><Button fx:id="more" styleClass="icon-button" accessibleText="Conversation actions"/></HBox></top>
+      <center><ScrollPane fx:id="messageScroll" fitToWidth="true" hbarPolicy="NEVER" styleClass="message-scroll"><content><VBox fx:id="messageList" spacing="18" fillWidth="true" styleClass="message-list"/></content></ScrollPane></center>
+      <bottom><VBox styleClass="composer-area" spacing="9">
+        <HBox fx:id="typingRow" alignment="CENTER_LEFT" spacing="7" visible="false" managed="false"><Label text="•••" styleClass="typing-dots"/><Label fx:id="typingLabel" styleClass="tiny,muted"/></HBox>
+        <HBox styleClass="composer-box" alignment="CENTER" spacing="10"><Button fx:id="attach" id="attach-file" onAction="#chooseFile" styleClass="icon-button" accessibleText="Attach a file"/><TextArea fx:id="composer" id="message-composer" promptText="Write a message…" prefRowCount="2" wrapText="true" HBox.hgrow="ALWAYS" styleClass="composer-input"/><Button fx:id="send" id="send-message" onAction="#sendMessage" styleClass="send-button" accessibleText="Send message"/></HBox>
+        <HBox alignment="CENTER_LEFT"><Label text="Demo conversation · no messages leave this device" styleClass="micro,muted"/><Region HBox.hgrow="ALWAYS"/><Label text="Enter to send · ⇧ Enter for a new line" styleClass="micro,muted"/></HBox>
+      </VBox></bottom>
+    </BorderPane>
+  </center>
+  <right>
+    <VBox fx:id="details" styleClass="details-panel" prefWidth="232" minWidth="215" spacing="20">
+      <Label text="CONVERSATION DETAILS" styleClass="eyebrow"/>
+      <VBox alignment="CENTER" spacing="11"><StackPane fx:id="detailAvatar"/><Label fx:id="detailName" styleClass="section-title"/><Label fx:id="detailRole" styleClass="tiny,muted"/><Label fx:id="detailOnline" styleClass="badge,badge-green"/></VBox>
+      <Separator/>
+      <VBox spacing="11"><Label text="Workspace session" styleClass="section-title"/><HBox spacing="7" alignment="CENTER_LEFT"><Label text="●" styleClass="accent-text"/><Label text="Local simulation" styleClass="small"/></HBox><Label text="Session data is fictional. This preview does not establish a TCP connection." wrapText="true" styleClass="tiny,muted"/><Button text="See the workflow   →" onAction="#openLab" styleClass="link-button"/></VBox>
+      <Separator/>
+      <HBox alignment="CENTER_LEFT"><Label text="Shared files" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="sharedCount" styleClass="tiny,muted"/></HBox>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="transparent-scroll"><content><VBox fx:id="sharedFiles" spacing="10"/></content></ScrollPane>
+      <Label text="File cards contain demo metadata. No file contents are sent or saved." wrapText="true" styleClass="micro,muted"/>
+    </VBox>
+  </right>
+</BorderPane>

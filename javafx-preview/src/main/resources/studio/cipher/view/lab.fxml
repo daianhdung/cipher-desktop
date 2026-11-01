@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="studio.cipher.ui.controllers.LabController" fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+ <content><VBox fx:id="labRoot" spacing="20" styleClass="page-content">
+  <HBox alignment="CENTER_LEFT" spacing="12"><VBox spacing="6" HBox.hgrow="ALWAYS"><Label text="Understand every step." styleClass="screen-title"/><Label text="From a simple message to an encrypted journey. Explore the workflow, visually." styleClass="body-copy" wrapText="true"/></VBox><Button fx:id="reset" id="lab-reset" text="Reset lab" onAction="#reset" styleClass="secondary-button"/></HBox>
+  <HBox styleClass="demo-notice" alignment="CENTER_LEFT" spacing="10"><StackPane fx:id="noticeIcon"/><Label text="ILLUSTRATIVE DEMO" styleClass="notice-title"/><Label text="No real RSA / AES operations. Ciphertext is labeled demo encoding, not secure data." wrapText="true" styleClass="notice-copy" HBox.hgrow="ALWAYS"/></HBox>
+  <GridPane hgap="14">
+   <columnConstraints><ColumnConstraints percentWidth="36"/><ColumnConstraints percentWidth="32"/><ColumnConstraints percentWidth="32"/></columnConstraints>
+   <VBox styleClass="security-card" spacing="9" GridPane.columnIndex="0"><HBox alignment="CENTER_LEFT" spacing="8"><StackPane fx:id="connectionIcon"/><Label text="Demo connection" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><Label text="SIMULATED" styleClass="badge,badge-neutral"/></HBox><Label fx:id="demoHost" styleClass="small"/><Label text="Local workflow · no socket opened" styleClass="tiny,muted"/></VBox>
+   <VBox styleClass="security-card" spacing="9" GridPane.columnIndex="1"><HBox alignment="CENTER_LEFT" spacing="8"><StackPane fx:id="keyIcon"/><Label text="RSA public key" styleClass="section-title"/></HBox><Label fx:id="rsaState" text="Not exchanged" styleClass="small"/><Label fx:id="fingerprint" styleClass="micro,mono,muted" wrapText="true"/></VBox>
+   <VBox styleClass="security-card" spacing="9" GridPane.columnIndex="2"><HBox alignment="CENTER_LEFT" spacing="8"><StackPane fx:id="sessionIcon"/><Label text="Session key" styleClass="section-title"/></HBox><Label fx:id="keyState" text="Waiting for demo exchange" styleClass="small"/><Button fx:id="exchange" id="lab-exchange" text="Simulate key exchange   →" onAction="#exchange" styleClass="link-button"/></VBox>
+  </GridPane>
+  <GridPane hgap="20" vgap="20">
+   <columnConstraints><ColumnConstraints percentWidth="51"/><ColumnConstraints percentWidth="49"/></columnConstraints>
+   <VBox spacing="16" GridPane.columnIndex="0">
+    <VBox spacing="12" styleClass="card,input-card">
+     <HBox alignment="CENTER_LEFT"><Label text="01" styleClass="step-number"/><Label text="Your message" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><Button text="Use example" onAction="#example" styleClass="link-button"/></HBox>
+     <Label text="Plaintext" styleClass="field-label"><tooltip><Tooltip text="The original, readable message before an encryption operation."/></tooltip></Label>
+     <TextArea fx:id="plaintext" id="lab-plaintext" wrapText="true" prefRowCount="3" minHeight="92" styleClass="lab-editor"/>
+     <HBox alignment="CENTER_LEFT"><Label text="Demo encryption key" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="inputCount" styleClass="micro,muted"/></HBox>
+     <PasswordField fx:id="demoKey" id="lab-key" promptText="Enter a demo key"><tooltip><Tooltip text="This field illustrates key input. No cryptographic key is created, stored, or transmitted."/></tooltip></PasswordField>
+     <HBox alignment="CENTER_LEFT" spacing="10"><Button fx:id="encrypt" id="lab-encrypt" text="Run encryption walkthrough" onAction="#encrypt" styleClass="primary-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/><Button fx:id="rotate" text="Rotate demo key" onAction="#exchange" styleClass="secondary-button"/></HBox>
+    </VBox>
+    <VBox spacing="12" styleClass="cipher-card">
+     <HBox alignment="CENTER_LEFT"><Label text="02" styleClass="cipher-step"/><Label text="Illustrative ciphertext" styleClass="cipher-title"/><Region HBox.hgrow="ALWAYS"/><Button fx:id="copy" id="lab-copy" text="Copy" onAction="#copy" styleClass="cipher-copy"/></HBox>
+     <TextArea fx:id="ciphertext" id="lab-ciphertext" editable="false" wrapText="true" prefRowCount="3" styleClass="cipher-text" text="Run the walkthrough to generate an illustrative payload."/>
+     <HBox spacing="8" alignment="CENTER_LEFT"><Label text="NONCE" styleClass="cipher-caption"/><Label fx:id="nonce" text="—" styleClass="cipher-caption,mono"/></HBox>
+     <Label text="Demo Base64 encoding only. This is not AES ciphertext and provides no confidentiality." wrapText="true" styleClass="cipher-disclaimer"/>
+    </VBox>
+   </VBox>
+   <VBox spacing="12" styleClass="card,analysis-card" GridPane.columnIndex="1">
+    <HBox alignment="CENTER_LEFT"><Label text="03" styleClass="step-number"/><Label text="Message analysis" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="analysisBadge" text="AWAITING INPUT" styleClass="badge,badge-neutral"/></HBox>
+    <HBox alignment="CENTER_LEFT"><Label text="Letter frequency" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="letterSummary" text="No results yet" styleClass="tiny,muted"/></HBox>
+    <BarChart fx:id="frequencyChart" id="frequency-chart" legendVisible="false" animated="false" prefHeight="180" minHeight="150" maxHeight="205" categoryGap="12" barGap="2" verticalGridLinesVisible="false"><xAxis><CategoryAxis tickLabelGap="6"/></xAxis><yAxis><NumberAxis label="Occurrences" minorTickVisible="false" forceZeroInRange="true" tickUnit="1"/></yAxis></BarChart>
+    <TableView fx:id="frequencyTable" id="frequency-table" prefHeight="130" minHeight="110" styleClass="frequency-table"/>
+    <HBox alignment="CENTER_LEFT" spacing="10"><Label text="Processing preview" styleClass="field-label"/><Region HBox.hgrow="ALWAYS"/><Button fx:id="decrypt" id="lab-decrypt" text="Reveal original" onAction="#decrypt" styleClass="link-button"/></HBox>
+    <Label fx:id="revealed" text="The original message will be shown here after the demo reveal." wrapText="true" styleClass="processing-preview" maxWidth="Infinity"/>
+    <Label text="Letter counts are computed locally for the UI demo. No Server processes this input." wrapText="true" styleClass="micro,muted"/>
+   </VBox>
+  </GridPane>
+  <VBox spacing="13" styleClass="card,flow-card">
+   <HBox alignment="CENTER_LEFT"><Label text="THE MESSAGE JOURNEY" styleClass="eyebrow"/><Region HBox.hgrow="ALWAYS"/><Label text="8 illustrative steps" styleClass="tiny,muted"/></HBox>
+   <FlowPane fx:id="flow" hgap="8" vgap="8"/>
+   <HBox alignment="CENTER_LEFT" spacing="8"><ProgressIndicator fx:id="busy" prefWidth="16" prefHeight="16" maxWidth="16" maxHeight="16"/><Label fx:id="labStatus" styleClass="tiny,muted" wrapText="true"/></HBox>
+  </VBox>
+ </VBox></content>
+</ScrollPane>

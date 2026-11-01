@@ -1,0 +1,6 @@
+build/
+server-data/
+server_files/
+client-downloads/
+*.part
+__pycache__/

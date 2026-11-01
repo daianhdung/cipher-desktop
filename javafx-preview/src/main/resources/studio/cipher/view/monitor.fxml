@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="studio.cipher.ui.controllers.MonitorController" fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll">
+ <content><VBox fx:id="monitorRoot" spacing="20" styleClass="page-content">
+  <HBox alignment="CENTER_LEFT" spacing="12"><VBox spacing="6" HBox.hgrow="ALWAYS"><HBox alignment="CENTER_LEFT" spacing="12"><Label text="Your network, at a glance." styleClass="screen-title"/><Label text="●  SIMULATED" styleClass="badge,badge-green"/></HBox><Label text="A local, in-memory picture of sessions, traffic and transfers. No Server is connected." styleClass="body-copy" wrapText="true"/></VBox><Button fx:id="pause" id="monitor-pause" text="Pause traffic" onAction="#toggleTraffic" styleClass="secondary-button"/><Button fx:id="scenario" id="monitor-scenario" text="Run scenario" styleClass="primary-button"/></HBox>
+  <HBox fx:id="metrics" spacing="12"/>
+  <GridPane hgap="20">
+   <columnConstraints><ColumnConstraints percentWidth="65"/><ColumnConstraints percentWidth="35"/></columnConstraints>
+   <VBox spacing="12" styleClass="card" GridPane.columnIndex="0">
+    <HBox alignment="CENTER_LEFT" spacing="12"><Label text="Network activity" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><ComboBox fx:id="chartMode" id="chart-mode" prefWidth="168"/></HBox>
+    <HBox spacing="16" alignment="CENTER_LEFT"><CheckBox fx:id="sentVisible" text="Sent" selected="true" styleClass="legend-sent"/><CheckBox fx:id="receivedVisible" text="Received" selected="true" styleClass="legend-received"/><Region HBox.hgrow="ALWAYS"/><Label text="Demo intervals · 2 sec target" styleClass="micro,muted"/></HBox>
+    <AreaChart fx:id="trafficChart" id="traffic-chart" animated="false" legendVisible="false" createSymbols="true" verticalZeroLineVisible="false" horizontalZeroLineVisible="false" verticalGridLinesVisible="false" prefHeight="205" minHeight="175"><xAxis><NumberAxis autoRanging="false" lowerBound="-24" upperBound="0" tickUnit="8" minorTickVisible="false" tickMarkVisible="false"/></xAxis><yAxis><NumberAxis forceZeroInRange="true" minorTickVisible="false"/></yAxis></AreaChart>
+   </VBox>
+   <VBox spacing="13" styleClass="card" GridPane.columnIndex="1">
+    <HBox alignment="CENTER_LEFT"><Label text="File transfers" styleClass="section-title"/><Region HBox.hgrow="ALWAYS"/><Label fx:id="activeTransferCount" styleClass="badge,badge-blue"/></HBox>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="236" styleClass="transparent-scroll"><content><VBox fx:id="transferList" spacing="14"/></content></ScrollPane>
+   </VBox>
+  </GridPane>
+  <VBox spacing="12" styleClass="card">
+   <HBox alignment="CENTER_LEFT" spacing="12"><Label text="Client sessions" styleClass="section-title"/><Label fx:id="sessionCount" styleClass="tiny,muted"/><Region HBox.hgrow="ALWAYS"/><CheckBox fx:id="onlineOnly" id="online-only" text="Online only"/><Button text="Simulate presence" onAction="#presence" styleClass="link-button"/></HBox>
+   <TableView fx:id="sessionTable" id="session-table" prefHeight="205" minHeight="170"/>
+   <Label text="All usernames, addresses and session IDs above are fictional demo fixtures." styleClass="micro,muted"/>
+  </VBox>
+  <VBox fx:id="logsContainer"/>
+ </VBox></content>
+</ScrollPane>

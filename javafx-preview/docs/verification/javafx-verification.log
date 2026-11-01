@@ -1,0 +1,33 @@
+BUILD OK: /Users/daianhdung/Documents/PTIT/HKVII_Lap-trinh-mang/DoAn_ChatAES/javafx-preview/target/demo
+PASS seed traffic reconciles with cumulative demo bytes
+PASS empty composer disables send
+PASS Shift+Enter inserts a newline
+PASS outgoing message appears immediately
+PASS delivery states and simulated incoming reply
+PASS active conversation does not accumulate unread replies
+PASS conversation search empty state
+PASS offline delivery failure is visible and counted
+PASS attachment cancellation state
+PASS attachment retry and complete progress
+PASS Encryption Lab navigation and FXML
+PASS lab action disabled before key exchange
+PASS illustrative cryptographic results explicitly labeled
+PASS local Unicode letter frequency totals
+PASS Monitoring navigation and FXML
+PASS monitor resume control
+PASS monitor pause control
+PASS connection metric matches online session rows
+PASS sent traffic reconciles with session counters
+PASS received traffic reconciles with session counters
+PASS active transfer metric reconciles with transfer states
+PASS interactive chart mode
+PASS session filtering
+PASS log search empty state
+PASS log severity filtering
+PASS details collapse at minimum window width
+PASS bounded log clear state
+PASS log retention bounded to 250 entries
+PASS sign out returns to username login
+PASS demo jobs stop on application close
+PASS automatic traffic timer pauses without blocking UI
+JAVAFX PREVIEW VERIFICATION OK · screenshots: /Users/daianhdung/Documents/PTIT/HKVII_Lap-trinh-mang/DoAn_ChatAES/javafx-preview/target/screenshots
